@@ -1,4 +1,4 @@
-import { getAllUsers, getUserByIdService,} from "../services/users.service.js"
+import { getAllUsers, getUserByIdService, getUserQuery, UsersRoleCount,} from "../services/users.service.js"
 
 export const getUsers = (req, res) =>{
     const users = getAllUsers();
@@ -20,6 +20,34 @@ export const getUserById = (req, res) =>{
     res.json(data);
 }
 
+export const getUserbyQuery = (req, res) => {
+    const {name, age} = req.query
+    console.log(name,age);
+    
+    const searchQuery = getUserQuery(name, age);
+
+    if(searchQuery.length === 0){
+       return res.status(404).json({
+        status : 404,
+        message : `${name} data not found`,
+       });
+    }
+    res.json({
+        status : 200,
+        message : 'ok',
+        data : searchQuery
+    })
+}
+
+
+export const getUserRoleCount = (req, res)=>{
+    const roleCount = UsersRoleCount();
+    res.json({
+        status: 200,
+        message: "ok",
+        data: roleCount
+           })
+}
 
 export const createUser = (req, res) =>{
     res.status(201).json({

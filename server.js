@@ -13,6 +13,6 @@ app.use(requestLogger);
 app.use('/api',router);
 
 app.listen(PORT, ()=>{
-    console.log('sever has been started');
+    console.log(`sever has been started at http://localhost:${PORT}`);
 });
 
