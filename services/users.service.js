@@ -1,7 +1,9 @@
 import fs from 'fs'
+import { User } from '../models/users.models.js'
 
-export const getAllUsers = () => {
-    const users = JSON.parse(fs.readFileSync('./data/data.json'));
+export const getAllUsers = async() => {
+    const users = await User.find({});
+
     return users    
 }
 
@@ -45,3 +47,10 @@ export const UsersRoleCount = ()=>{
 
     }
 
+
+    export const NewUserRegister = async (data)=>{
+        console.log(data);
+        const Users = await User.create(data);
+        return Users;
+
+    }

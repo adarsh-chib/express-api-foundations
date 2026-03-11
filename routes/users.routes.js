@@ -1,5 +1,5 @@
 import express from 'express'
-import { deleteUserById, getUserById, getUsers, updateUserById, createUser, replaceUserById, getUserbyQuery, getUserRoleCount,} from '../controller/users.controller.js';
+import { deleteUserById, getUserById, getUsers, updateUserById, createUser, replaceUserById, getUserbyQuery, getUserRoleCount, UserRegister,} from '../controller/users.controller.js';
 
 
 
@@ -18,5 +18,7 @@ router.put('/user/:id',replaceUserById);
 router.patch('/user/:id',updateUserById);
 
 router.delete('/user/:id',deleteUserById);
+
+router.post('/user/create',UserRegister);
 
 export default router
