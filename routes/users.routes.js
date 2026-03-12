@@ -1,24 +1,36 @@
-import express from 'express'
-import { deleteUserById, getUserById, getUsers, updateUserById, createUser, replaceUserById, getUserbyQuery, getUserRoleCount, UserRegister,} from '../controller/users.controller.js';
-
-
+import express from "express";
+import {
+  deleteUserById,
+  getUserById,
+  getUsers,
+  updateUserById,
+  createUser,
+  replaceUserById,
+  getUserbyQuery,
+  getUserRoleCount,
+  UserRegister,
+  findUser,
+  deleteUser,
+  deleteId,
+} from "../controller/users.controller.js";
 
 const router = express.Router();
 
+router.get("/user/:id", getUserById);
+router.get("/user", getUserbyQuery);
+router.get("/users/count", getUserRoleCount);
 
-router.get('/users',getUsers);
-router.get('/user/:id',getUserById);
-router.get('/user',getUserbyQuery);
-router.get('/users/count',getUserRoleCount)
+router.post("/user", createUser);
+router.put("/user/:id", replaceUserById);
 
-router.post('/user',createUser);
-router.put('/user/:id',replaceUserById);
+router.patch("/user/:id", updateUserById);
 
+//-----------------------------------------------------
 
-router.patch('/user/:id',updateUserById);
+router.get("/users", getUsers); //---user list
+router.post("/user/create", UserRegister);
+router.get("/user/find/:id", findUser);
+router.delete("/user/delete/:id", deleteUser);
+router.delete("/delete/:id", deleteId);
 
-router.delete('/user/:id',deleteUserById);
-
-router.post('/user/create',UserRegister);
-
-export default router
+export default router;
