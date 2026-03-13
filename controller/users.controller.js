@@ -3,12 +3,16 @@ import {
   deleteUserId,
   deleteUsersId,
   findUserId,
+  fullUpdateUserService,
   getAllUsers,
   getUserByIdService,
   getUserQuery,
   NewUserRegister,
+  replaceUserService,
+  updataUserService,
   UsersRoleCount,
 } from "../services/users.service.js";
+import { User } from "../models/users.models.js";
 
 export const getUserById = (req, res) => {
   const id = Number(req.params.id);
@@ -22,7 +26,6 @@ export const getUserById = (req, res) => {
 
 export const getUserbyQuery = (req, res) => {
   const { name, age } = req.query;
-  console.log(name, age);
 
   const searchQuery = getUserQuery(name, age);
 
@@ -107,18 +110,25 @@ export const getUsers = async (req, res) => {
 };
 
 export const UserRegister = async (req, res) => {
+  const data = req.body;
+
+  if (!data.name || !data.email || !data.phoneNumber) {
+    return res.status(404).json({
+      status: 404,
+      message: "fill the required information",
+    });
+  }
+
   try {
-    const data = req.body;
     const user = await NewUserRegister(data);
-    console.log(user);
     res.status(201).json({
       status: 201,
       message: `new user has been created`,
       data: user,
     });
   } catch (err) {
-    res.status(400).json({
-      status: 400,
+    res.status(500).json({
+      status: 500,
       message: err.message,
     });
   }
@@ -202,6 +212,109 @@ export const deleteId = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: 400,
+      message: err.message,
+    });
+  }
+};
+
+//--------------------- put method ---------------------------------
+
+export const replaceUser = async (req, res) => {
+  const id = req.params.id;
+  const { name, email, phoneNumber, role } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      status: 400,
+      message: "Invalid id",
+    });
+  }
+
+  try {
+    const update = await replaceUserService(id, {
+      name,
+      email,
+      phoneNumber,
+      role,
+    });
+
+    if (!update) {
+      return res.status(404).json({
+        status: 404,
+        message: "user not found",
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "user has been updated",
+      data: update,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 500,
+      message: err.message,
+    });
+  }
+};
+
+export const fullUpdate = async (req, res) =>{
+  const email = req.params.email;
+  console.log(email);
+  const {name , phoneNumber, role} = req.body
+
+  const updateUser = await fullUpdateUserService(email, {name , phoneNumber, role} )
+
+  try{
+    if(!updateUser){
+      return res.status(404).json({
+        status : 404,
+        message : 'user not found'
+      })
+    }
+    res.status(200).json({
+      status : 200,
+      message : 'ok',
+      data : updateUser
+    })
+  }
+  catch(err){
+    res.status(500).json({
+      status : 500,
+      message : err.message
+    })
+  }
+}
+
+//------------------------- patch method ---------------------------
+
+export const userUpdate = async (req, res) => {
+  const id = req.params.id;
+  const updateData = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      status: 400,
+      message: "Invalid id",
+    });
+  }
+
+  try {
+    const UpdateUser = await updataUserService(id, updateData);
+
+    if (!UpdateUser) {
+      return res.status(404).json({
+        status: 404,
+        message: "data not found",
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "ok",
+      data: UpdateUser,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 500,
       message: err.message,
     });
   }

@@ -90,3 +90,45 @@ export const deleteUserId = async (id) => {
   const deleteUser = await User.deleteOne({ _id: id });
   return deleteUser;
 };
+
+//------------------------ put method -----------------------------
+
+export const replaceUserService = async (id, updateData) => {
+  const user = await User.findById(id);
+
+  if (!user) {
+    return null;
+  }
+  const userUpadate = await User.findByIdAndUpdate(id, updateData, {
+    new: true,
+  });
+  return userUpadate;
+};
+
+export const fullUpdateUserService = async (email, updatedata) => {
+  const finduser = await User.find({email});
+
+  if (!finduser) {
+    return null;
+  }
+
+  const userFound = await User.findOneAndUpdate(
+    {email},
+    updatedata,
+
+    { new: true },
+  );
+
+  return userFound;
+};
+
+//------------------ patch --------------------------
+
+export const updataUserService = async (id, updatedata) => {
+  const user = await User.findByIdAndUpdate(id, updatedata, {
+    $set: updatedata,
+    new: true,
+  });
+
+  return user;
+};
